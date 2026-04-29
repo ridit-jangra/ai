@@ -96,8 +96,9 @@ export function loadMemoryIntoSession(
       content:
         "Memory loaded. I'll apply these preferences throughout our session.",
     });
+
+    session.memoryLoaded = true;
   }
 
-  session.memoryLoaded = true;
   return session;
 }

@@ -52,7 +52,7 @@ export type StepToolResult = {
 
 export type LLMOptions = {
   system?: string;
-  tools?: ToolSet;
+  mode?: Mode;
   session?: Session;
   prompt: string;
   onToolCall?: (toolCall: StepToolCall) => void;

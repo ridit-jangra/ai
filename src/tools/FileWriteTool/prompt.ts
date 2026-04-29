@@ -13,7 +13,4 @@ Path resolution rules:
 Before using this tool:
 
 1. If overwriting an existing file, use ReadFile first to understand its contents.
-   If creating a new file, skip this step.
-
-2. Directory Verification (only applicable when creating new files):
-   - Use the LS tool to verify the parent directory exists and is the correct location`;
+   If creating a new file, skip this step.`;

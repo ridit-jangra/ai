@@ -19,7 +19,7 @@ export type RunLLMOptions = LLMOptions & {
 
 export async function runLLM({
   system,
-  tools,
+  mode,
   session,
   sessionStore,
   memoryContent,
@@ -50,7 +50,7 @@ export async function runLLM({
     system,
     messages: activeSession.messages,
     stopWhen: stepCountIs(steps ?? 100),
-    tools,
+    tools: mode?.tools,
     abortSignal,
     experimental_repairToolCall: async ({ toolCall }) => {
       const repaired = repairJSON(toolCall.input as string);
