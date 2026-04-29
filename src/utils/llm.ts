@@ -1,19 +1,14 @@
 import { generateText, stepCountIs } from "ai";
-import { getModel } from "./model";
-import {
-  type Session,
-  type SessionStoreOptions,
-  createSession,
-  loadMemoryIntoSession,
-  saveSession,
-} from "./session";
+import { type Session, createSession, loadMemoryIntoSession } from "./session";
 import type { LLMOptions } from "../types";
 import { compactSession, shouldCompact } from "./compaction";
 import { repairJSON } from "./json";
+import type { Store } from "./store";
 
 export type RunLLMOptions = LLMOptions & {
   session?: Session;
-  sessionStore?: SessionStoreOptions; // if omitted, session won't be persisted
+  sessionId?: string;
+  sessionStore?: Store; // if omitted, session won't be persisted
   memoryContent?: string;
 };
 
@@ -22,6 +17,7 @@ export async function runLLM({
   mode,
   session,
   sessionStore,
+  sessionId,
   memoryContent,
   prompt,
   onToolCall,
@@ -30,7 +26,15 @@ export async function runLLM({
   steps,
   provider,
 }: RunLLMOptions): Promise<{ text: string; session: Session }> {
-  const activeSession = session ?? createSession();
+  let activeSession: Session;
+
+  if (session) {
+    activeSession = session;
+  } else if (sessionStore && sessionId) {
+    activeSession = sessionStore.load(sessionId) ?? createSession(sessionId);
+  } else {
+    activeSession = createSession(sessionId);
+  }
 
   loadMemoryIntoSession(activeSession, memoryContent);
 
@@ -86,7 +90,7 @@ export async function runLLM({
   ];
 
   if (sessionStore) {
-    saveSession(activeSession, sessionStore);
+    sessionStore.save(activeSession);
   }
 
   return { text: result.text, session: activeSession };

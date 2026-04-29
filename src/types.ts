@@ -1,6 +1,6 @@
 import type { LanguageModel, ToolSet } from "ai";
 import type { Session } from "./utils/session";
-import type { ProviderConfig } from "./utils/providers";
+import type { Store } from "./utils/store";
 
 export type Mode = {
   name: string;
@@ -60,6 +60,7 @@ export type LLMOptions = {
   abortSignal?: AbortSignal;
   steps?: number;
   provider: LanguageModel;
+  sessionStore?: Store;
 };
 
 export type PermissionDecision = "allow" | "allow_session" | "deny";
