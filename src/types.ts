@@ -51,11 +51,10 @@ export type StepToolResult = {
 };
 
 export type LLMOptions = {
-  system: string;
+  system?: string;
   tools?: ToolSet;
   session?: Session;
   prompt: string;
-  mode?: Mode;
   onToolCall?: (toolCall: StepToolCall) => void;
   onToolResult?: (toolResult: StepToolResult) => void;
   abortSignal?: AbortSignal;

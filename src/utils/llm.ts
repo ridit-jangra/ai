@@ -2,6 +2,7 @@ import { generateText, stepCountIs } from "ai";
 import { getModel } from "./model";
 import {
   type Session,
+  type SessionStoreOptions,
   createSession,
   loadMemoryIntoSession,
   saveSession,
@@ -10,26 +11,30 @@ import type { LLMOptions } from "../types";
 import { compactSession, shouldCompact } from "./compaction";
 import { repairJSON } from "./json";
 
+export type RunLLMOptions = LLMOptions & {
+  session?: Session;
+  sessionStore?: SessionStoreOptions; // if omitted, session won't be persisted
+  memoryContent?: string;
+};
+
 export async function runLLM({
   system,
   tools,
   session,
+  sessionStore,
+  memoryContent,
   prompt,
   onToolCall,
   onToolResult,
   abortSignal,
   steps,
   provider,
-}: LLMOptions): Promise<{ text: string; session: Session }> {
+}: RunLLMOptions): Promise<{ text: string; session: Session }> {
   const activeSession = session ?? createSession();
-  loadMemoryIntoSession(activeSession);
+
+  loadMemoryIntoSession(activeSession, memoryContent);
 
   if (shouldCompact(activeSession)) {
-    // activeSession.messages.push({
-    //   role: "user",
-    //   content:
-    //     "Your context is very long. Call CompactTool now with a full summary before doing anything else.",
-    // });
     const summary = await generateText({
       model: provider,
       prompt: `summarize this chat: ${JSON.stringify(activeSession.messages)}`,
@@ -42,7 +47,7 @@ export async function runLLM({
 
   const result = await generateText({
     model: provider,
-    system: system,
+    system,
     messages: activeSession.messages,
     stopWhen: stepCountIs(steps ?? 100),
     tools,
@@ -80,6 +85,9 @@ export async function runLLM({
     ...result.response.messages,
   ];
 
-  saveSession(activeSession);
+  if (sessionStore) {
+    saveSession(activeSession, sessionStore);
+  }
+
   return { text: result.text, session: activeSession };
 }

@@ -1,4 +1,3 @@
-export { chat } from "../utils/chat";
 export { runLLM } from "../utils/llm";
 export { getModel } from "../utils/model";
 export {
