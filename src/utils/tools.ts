@@ -10,10 +10,6 @@ import { MemoryReadTool } from "../tools/MemoryReadTool/tool";
 import { MemoryWriteTool } from "../tools/MemoryWriteTool/tool";
 import { RecallTool } from "../tools/RecallTool/tool";
 import { ThinkTool } from "../tools/ThinkTool/tool";
-import { WebFetchTool } from "../tools/WebFetchTool/tool";
-import { WebSearchTool } from "../tools/WebSearchTool/tool";
-import { DownloadTool } from "../tools/DownloadTool/tool";
-import { HumanEditTool } from "../tools/HumanEditTool/tool";
 
 export const agentTools = {
   FileReadTool,
@@ -28,21 +24,6 @@ export const agentTools = {
   ThinkTool,
   GlobTool,
   RecallTool,
-  WebFetchTool,
-  WebSearchTool,
-  DownloadTool,
-  HumanEditTool,
-};
-
-export const orchestratorAgentTools = {
-  FileReadTool,
-  FileWriteTool,
-  FileEditTool,
-  BashTool,
-  GrepTool,
-  GlobTool,
-  ThinkTool,
-  DownloadTool,
 };
 
 export const subagentTools = {
@@ -53,8 +34,6 @@ export const subagentTools = {
   GrepTool,
   GlobTool,
   ThinkTool,
-
-  DownloadTool,
 };
 
 export const chatTools = {
@@ -62,16 +41,4 @@ export const chatTools = {
   FileReadTool,
   GrepTool,
   MemoryReadTool,
-  WebFetchTool,
-  WebSearchTool,
-  HumanEditTool,
-};
-
-export const connectorTools = {
-  FileReadTool,
-  GrepTool,
-  GlobTool,
-  BashTool,
-  ThinkTool,
-  DownloadTool,
 };

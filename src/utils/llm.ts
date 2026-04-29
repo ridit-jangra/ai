@@ -7,12 +7,7 @@ import {
   saveSession,
 } from "./session";
 import type { LLMOptions } from "../types";
-import {
-  COMPACTION_THRESHOLD,
-  compactSession,
-  estimateTokens,
-  shouldCompact,
-} from "./compaction";
+import { compactSession, shouldCompact } from "./compaction";
 import { repairJSON } from "./json";
 
 export async function runLLM({
@@ -20,15 +15,16 @@ export async function runLLM({
   tools,
   session,
   prompt,
-  mode = "agent",
   onToolCall,
   onToolResult,
   abortSignal,
+  steps,
+  provider,
 }: LLMOptions): Promise<{ text: string; session: Session }> {
   const activeSession = session ?? createSession();
   loadMemoryIntoSession(activeSession);
 
-  const { model } = await getModel();
+  const { model } = provider;
 
   if (shouldCompact(activeSession)) {
     // activeSession.messages.push({
@@ -46,28 +42,11 @@ export async function runLLM({
   const messagesBeforePrompt = [...activeSession.messages];
   activeSession.messages.push({ role: "user", content: prompt });
 
-  const tokenCount = estimateTokens(activeSession.messages);
-
-  const toolReminder = tools
-    ? `\n\n# STRICT TOOL RULE — you may ONLY call these tools: ${Object.keys(tools).join(", ")}. Calling anything else will crash. No exceptions.`
-    : "";
-
-  const stepLimits: Record<string, number> = {
-    chat: 30,
-    agent: 150,
-    build: 200,
-    orchestratorAgent: 50,
-    subagent: 50,
-  };
-
   const result = await generateText({
     model,
-    system:
-      system +
-      `\n\n# Context usage\nTokens used so far: ~${tokenCount}. If this exceeds ${COMPACTION_THRESHOLD}, call CompactTool immediately.` +
-      toolReminder,
+    system: system,
     messages: activeSession.messages,
-    stopWhen: stepCountIs(stepLimits[mode] ?? 100),
+    stopWhen: stepCountIs(steps ?? 100),
     tools,
     abortSignal,
     experimental_repairToolCall: async ({ toolCall }) => {

@@ -1,11 +1,11 @@
-import { runLLM } from "./llm";
+import { runLLM } from "../utils/llm";
 import type { StepToolCall, StepToolResult } from "../types";
-import { chatTools } from "./tools";
-import type { Session } from "./session";
-import { chatMode } from "./mode";
+import { agentTools } from "../utils/tools";
+import type { Session } from "../utils/session";
+import { agentMode } from "./mode";
 import type { ProviderConfig } from "./providers";
 
-export async function chat(
+export async function createAgent(
   prompt: string,
   provider: ProviderConfig,
   session?: Session,
@@ -18,12 +18,11 @@ export async function chat(
     system: systemPrompt ?? "",
     prompt,
     session,
-    mode: chatMode,
-    tools: chatTools,
+    mode: agentMode,
+    tools: agentTools,
     onToolCall,
     onToolResult,
     abortSignal,
-    steps: 50,
     provider,
   });
 }

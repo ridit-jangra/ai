@@ -1,7 +1,11 @@
 import type { ToolSet } from "ai";
 import type { Session } from "./utils/session";
+import type { ProviderConfig } from "./utils/providers";
 
-export type Mode = "chat" | "agent" | "build";
+export type Mode = {
+  name: string;
+  tools: ToolSet;
+};
 
 export type ChatMessage =
   | { id: string; type: "user"; text: string }
@@ -51,10 +55,12 @@ export type LLMOptions = {
   tools?: ToolSet;
   session?: Session;
   prompt: string;
-  mode?: "chat" | "agent" | "build" | "subagent" | "orchestratorAgent";
+  mode?: Mode;
   onToolCall?: (toolCall: StepToolCall) => void;
   onToolResult?: (toolResult: StepToolResult) => void;
   abortSignal?: AbortSignal;
+  steps?: number;
+  provider: ProviderConfig;
 };
 
 export type PermissionDecision = "allow" | "allow_session" | "deny";
