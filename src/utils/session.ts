@@ -1,7 +1,9 @@
 import type { ModelMessage } from "ai";
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
 import { join } from "path";
-import { SESSIONS_DIR } from "./env";
+// import { SESSIONS_DIR } from "./env";
+
+const SESSIONS_DIR = "./sessions";
 
 export type Session = {
   id: string;

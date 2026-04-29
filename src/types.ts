@@ -1,4 +1,4 @@
-import type { ToolSet } from "ai";
+import type { LanguageModel, ToolSet } from "ai";
 import type { Session } from "./utils/session";
 import type { ProviderConfig } from "./utils/providers";
 
@@ -60,7 +60,7 @@ export type LLMOptions = {
   onToolResult?: (toolResult: StepToolResult) => void;
   abortSignal?: AbortSignal;
   steps?: number;
-  provider: ProviderConfig;
+  provider: LanguageModel;
 };
 
 export type PermissionDecision = "allow" | "allow_session" | "deny";

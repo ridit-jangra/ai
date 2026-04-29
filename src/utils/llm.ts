@@ -24,8 +24,6 @@ export async function runLLM({
   const activeSession = session ?? createSession();
   loadMemoryIntoSession(activeSession);
 
-  const { model } = provider;
-
   if (shouldCompact(activeSession)) {
     // activeSession.messages.push({
     //   role: "user",
@@ -33,7 +31,7 @@ export async function runLLM({
     //     "Your context is very long. Call CompactTool now with a full summary before doing anything else.",
     // });
     const summary = await generateText({
-      model,
+      model: provider,
       prompt: `summarize this chat: ${JSON.stringify(activeSession.messages)}`,
     });
     compactSession(activeSession, summary.text);
@@ -43,7 +41,7 @@ export async function runLLM({
   activeSession.messages.push({ role: "user", content: prompt });
 
   const result = await generateText({
-    model,
+    model: provider,
     system: system,
     messages: activeSession.messages,
     stopWhen: stepCountIs(steps ?? 100),

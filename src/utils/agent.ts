@@ -3,11 +3,11 @@ import type { StepToolCall, StepToolResult } from "../types";
 import { agentTools } from "../utils/tools";
 import type { Session } from "../utils/session";
 import { agentMode } from "./mode";
-import type { ProviderConfig } from "./providers";
+import type { LanguageModel } from "ai";
 
 export async function createAgent(
   prompt: string,
-  provider: ProviderConfig,
+  provider: LanguageModel,
   session?: Session,
   onToolCall?: (t: StepToolCall) => void,
   onToolResult?: (t: StepToolResult) => void,

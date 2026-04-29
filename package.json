@@ -12,6 +12,12 @@
   "peerDependencies": {
     "typescript": "^5"
   },
+  "export": {
+    "./ai": "./dist/ai.js",
+    "./skills": "./dist/skills.js",
+    "./tools": "./dist/tools.js",
+    "./utils": "./dist/utils.js"
+  },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.66",
     "@ai-sdk/google": "^3.0.57",

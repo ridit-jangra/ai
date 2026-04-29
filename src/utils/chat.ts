@@ -3,11 +3,11 @@ import type { StepToolCall, StepToolResult } from "../types";
 import { chatTools } from "./tools";
 import type { Session } from "./session";
 import { chatMode } from "./mode";
-import type { ProviderConfig } from "./providers";
+import type { LanguageModel } from "ai";
 
 export async function chat(
   prompt: string,
-  provider: ProviderConfig,
+  provider: LanguageModel,
   session?: Session,
   onToolCall?: (t: StepToolCall) => void,
   onToolResult?: (t: StepToolResult) => void,

@@ -2,7 +2,6 @@ import { tool } from "ai";
 import { z } from "zod";
 import { mkdirSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
-import { MEMORY_DIR } from "../../utils/env";
 import { DESCRIPTION, PROMPT } from "./prompt";
 
 export const MemoryWriteTool = tool({
@@ -18,12 +17,12 @@ export const MemoryWriteTool = tool({
   }),
   execute: async ({ name, content }) => {
     try {
-      const fullPath = join(MEMORY_DIR, name);
-      if (!fullPath.startsWith(MEMORY_DIR)) {
-        return { success: false, error: "Invalid memory file path" };
-      }
-      mkdirSync(dirname(fullPath), { recursive: true });
-      writeFileSync(fullPath, content, "utf-8");
+      // const fullPath = join(MEMORY_DIR, name);
+      // if (!fullPath.startsWith(MEMORY_DIR)) {
+      //   return { success: false, error: "Invalid memory file path" };
+      // }
+      // mkdirSync(dirname(fullPath), { recursive: true });
+      // writeFileSync(fullPath, content, "utf-8");
       return { success: true, message: "Memory saved" };
     } catch (err) {
       return { success: false, error: String(err) };

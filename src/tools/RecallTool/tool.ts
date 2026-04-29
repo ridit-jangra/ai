@@ -3,7 +3,7 @@ import { z } from "zod";
 import fs from "fs/promises";
 import path from "path";
 import { DESCRIPTION, PROMPT } from "./prompt";
-import { SESSIONS_DIR } from "../../utils/env";
+// import { SESSIONS_DIR } from "../../utils/env";
 
 type Message = {
   role: string;
@@ -32,23 +32,20 @@ function isVagueQuery(query: string) {
   return vague.some((v) => q.includes(v));
 }
 
-async function getSessionFilesSorted(): Promise<string[]> {
-  const files = await fs.readdir(SESSIONS_DIR);
-
-  const fullPaths = files
-    .filter((f) => f.endsWith(".json"))
-    .map((f) => path.join(SESSIONS_DIR, f));
-
-  const stats = await Promise.all(
-    fullPaths.map(async (file) => ({
-      file,
-      stat: await fs.stat(file),
-    })),
-  );
-
-  return stats
-    .sort((a, b) => b.stat.mtimeMs - a.stat.mtimeMs)
-    .map((s) => s.file);
+async function getSessionFilesSorted() {
+  // const files = await fs.readdir(SESSIONS_DIR);
+  // const fullPaths = files
+  //   .filter((f) => f.endsWith(".json"))
+  //   .map((f) => path.join(SESSIONS_DIR, f));
+  // const stats = await Promise.all(
+  //   fullPaths.map(async (file) => ({
+  //     file,
+  //     stat: await fs.stat(file),
+  //   })),
+  // );
+  // return stats
+  //   .sort((a, b) => b.stat.mtimeMs - a.stat.mtimeMs)
+  //   .map((s) => s.file);
 }
 
 async function readSession(file: string): Promise<Session | null> {
@@ -83,69 +80,63 @@ export const RecallTool = tool({
   }),
 
   execute: async ({ query, max_results }) => {
-    const files = await getSessionFilesSorted();
+    // const files = await getSessionFilesSorted();
 
-    if (isVagueQuery(query)) {
-      const recent = [];
+    // if (isVagueQuery(query)) {
+    //   const recent = [];
 
-      for (const file of files.slice(0, max_results)) {
-        const session = await readSession(file);
-        if (!session) continue;
+    //   for (const file of files.slice(0, max_results)) {
+    //     const session = await readSession(file);
+    //     if (!session) continue;
 
-        const text = extractText(session);
+    //     const text = extractText(session);
 
-        recent.push({
-          sessionFile: path.basename(file),
-          snippet: text.slice(0, 800),
-        });
-      }
+    //     recent.push({
+    //       sessionFile: path.basename(file),
+    //       snippet: text.slice(0, 800),
+    //     });
+    //   }
 
-      return {
-        query,
-        mode: "recent",
-        results: recent,
-      };
-    }
+    //   return {
+    //     query,
+    //     mode: "recent",
+    //     results: recent,
+    //   };
+    // }
 
-    const results: {
-      sessionFile: string;
-      snippet: string;
-      score: number;
-    }[] = [];
+    // const results: {
+    //   sessionFile: string;
+    //   snippet: string;
+    //   score: number;
+    // }[] = [];
 
-    for (const file of files.slice(0, 20)) {
-      const session = await readSession(file);
-      if (!session) continue;
+    // for (const file of files.slice(0, 20)) {
+    //   const session = await readSession(file);
+    //   if (!session) continue;
 
-      const text = extractText(session);
-      const score = scoreMatch(text, query);
+    //   const text = extractText(session);
+    //   const score = scoreMatch(text, query);
 
-      if (score > 0) {
-        results.push({
-          sessionFile: path.basename(file),
-          snippet: text.slice(0, 800),
-          score,
-        });
-      }
-    }
+    //   if (score > 0) {
+    //     results.push({
+    //       sessionFile: path.basename(file),
+    //       snippet: text.slice(0, 800),
+    //       score,
+    //     });
+    //   }
+    // }
 
-    if (results.length === 0) {
-      return {
-        query,
-        results: [],
-        message:
-          "No strong matches found. Try a more specific query or ask for recent sessions.",
-      };
-    }
+    // if (results.length === 0) {
+    //   return {
+    //     query,
+    //     results: [],
+    //     message:
+    //       "No strong matches found. Try a more specific query or ask for recent sessions.",
+    //   };
+    // }
 
-    results.sort((a, b) => b.score - a.score);
+    // results.sort((a, b) => b.score - a.score);
 
-    return {
-      query,
-      total_matches: results.length,
-      results: results
-        .slice(0, max_results)
-        .map(({ score: _score, ...rest }) => rest),
-    };
+    return {};
   },
 });
