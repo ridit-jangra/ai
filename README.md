@@ -85,11 +85,11 @@ sessions are opt-in. no storage passed = runs in memory, nothing saved. your cal
 ### node
 
 ```typescript
-import { FileSystemStorage } from "@ridit/ai/utils";
+import { createFileStore } from "@ridit/ai/utils";
 
-const storage = new FileSystemStorage({ sessionsDir: "./sessions" });
+const store = createFileStore({ sessionsDir: "./sessions" });
 
-const { session } = await runLLM({ prompt: "hey", provider, storage });
+const { session } = await runLLM({ prompt: "hey", provider, store });
 
 // resume later
 const { text } = await runLLM({
@@ -123,20 +123,6 @@ bring your own adapter. redis, supabase, sqlite — whatever you want.
 
 ---
 
-## memory
-
-```typescript
-import { readFileSync } from "fs";
-
-const { text } = await runLLM({
-  prompt: "what are my preferences?",
-  provider,
-  memoryContent: readFileSync("./MEMORY.md", "utf-8"),
-});
-```
-
----
-
 ## tools
 
 ```typescript
@@ -147,64 +133,21 @@ import {
   FileEditTool, // patch files
   GlobTool, // find files by pattern
   GrepTool, // search inside files
-  WebFetchTool, // fetch a URL
-  WebSearchTool, // search the web
   ThinkTool, // internal reasoning step
   MemoryReadTool,
   MemoryWriteTool,
   MemoryEditTool,
   RecallTool, // semantic memory recall
-  AgentTool, // spawn sub-agents
-  TalkTool, // agent-to-agent comms
 } from "@ridit/ai/tools";
 ```
 
 Create yours too!
-
-### permission hooks
-
-```typescript
-const { text } = await runLLM({
-  prompt: "delete all logs",
-  provider,
-  tools: { BashTool, FileEditTool },
-  onToolCall: async (tool, args) => {
-    return await myPermissionSystem.check(tool.name, args); // true = allow
-  },
-});
-```
-
----
-
-## multi-agent
-
-agents that coordinate agents.
-
-```typescript
-import { AgentTool, FileWriteTool } from "@ridit/ai/tools";
-
-const { text } = await runLLM({
-  prompt: "research the top 5 js frameworks and write a comparison report",
-  provider,
-  tools: { AgentTool, FileWriteTool },
-});
-```
-
-`AgentTool` lets the agent spawn sub-agents mid-task. parallel research, delegation, review loops — it just works.
 
 ---
 
 ## compaction
 
 when sessions get long, `@ridit/ai` summarizes the history and compacts it automatically before the next call. you don't have to think about it.
-
-```typescript
-await runLLM({
-  prompt: "...",
-  provider,
-  compactionThreshold: 0.8, // compact at 80% context usage
-});
-```
 
 ---
 

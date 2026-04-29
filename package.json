@@ -1,6 +1,6 @@
 {
   "name": "@ridit/ai",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Your agents, in minutes.",
   "author": "Ridit Jangra <riditjangra09@gmail.com> (https://ridit.space)",
   "license": "MIT",
@@ -13,7 +13,8 @@
     "clean": "rm -rf dist",
     "build:js": "bun build ./src/exports/*.ts --outdir ./dist --format esm --target node",
     "build:types": "tsc -p tsconfig.build.json",
-    "build": "bun run clean && bun run build:js && bun run build:types"
+    "build": "bun run clean && bun run build:js && bun run build:types",
+    "prepublishOnly": "bun run build"
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -51,5 +52,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@ridit/ai": "^0.1.1"
   }
 }
