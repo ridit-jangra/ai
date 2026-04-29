@@ -9,14 +9,32 @@
     "type": "git",
     "url": "git+https://github.com/ridit-jangra/ai.git"
   },
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build:js": "bun build ./src/exports/*.ts --outdir ./dist --format esm --target node",
+    "build:types": "tsc -p tsconfig.build.json",
+    "build": "bun run clean && bun run build:js && bun run build:types"
+  },
   "peerDependencies": {
     "typescript": "^5"
   },
-  "export": {
-    "./ai": "./dist/ai.js",
-    "./skills": "./dist/skills.js",
-    "./tools": "./dist/tools.js",
-    "./utils": "./dist/utils.js"
+  "exports": {
+    "./ai": {
+      "import": "./dist/ai.js",
+      "types": "./dist/exports/ai.d.ts"
+    },
+    "./skills": {
+      "import": "./dist/skills.js",
+      "types": "./dist/exports/skills.d.ts"
+    },
+    "./tools": {
+      "import": "./dist/tools.js",
+      "types": "./dist/exports/tools.d.ts"
+    },
+    "./utils": {
+      "import": "./dist/utils.js",
+      "types": "./dist/exports/utils.d.ts"
+    }
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.66",

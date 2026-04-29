@@ -1,4 +1,3 @@
-import { AgentTool } from "../tools/AgentTool/tool";
 import { BashTool } from "../tools/BashTool/tool";
 import { FileEditTool } from "../tools/FileEditTool/tool";
 import { FileReadTool } from "../tools/FileReadTool/tool";
@@ -17,7 +16,7 @@ export const agentTools = {
   FileEditTool,
   GrepTool,
   BashTool,
-  AgentTool,
+
   MemoryReadTool,
   MemoryWriteTool,
   MemoryEditTool,

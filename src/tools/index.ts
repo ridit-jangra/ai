@@ -1,4 +1,3 @@
-export { AgentTool } from "./AgentTool/tool";
 export { BashTool } from "./BashTool/tool";
 export { FileEditTool } from "./FileEditTool/tool";
 export { FileReadTool } from "./FileReadTool/tool";

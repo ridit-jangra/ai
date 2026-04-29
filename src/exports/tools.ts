@@ -1,5 +1,4 @@
 export {
-  AgentTool,
   BashTool,
   FileEditTool,
   FileReadTool,
@@ -11,4 +10,4 @@ export {
   MemoryWriteTool,
   RecallTool,
   ThinkTool,
-} from "../tools/index.ts";
+} from "../tools/index";
