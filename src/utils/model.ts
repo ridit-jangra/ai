@@ -1,0 +1,21 @@
+import { getActiveProvider, buildProvider } from "./providers";
+import type { LanguageModel } from "ai";
+import type { ProviderConfig } from "./providers";
+
+export async function getModel(): Promise<{
+  model: LanguageModel;
+  modelId: string;
+  config: ProviderConfig;
+}> {
+  const config = await getActiveProvider();
+  if (!config) {
+    throw new Error(
+      "no provider configured — run /provider add to get started 🐱",
+    );
+  }
+  return {
+    model: buildProvider(config),
+    modelId: `${config.name} · ${config.model}`,
+    config,
+  };
+}
