@@ -9,3 +9,5 @@ export {
 export { repairJSON, safeParseJSON } from "../utils/json";
 export { type GrepMatch, grep } from "../utils/ripgrep";
 export { type Store, createFileStore, createStore } from "../utils/store";
+export { createMode, agentMode, chatMode } from "../utils/mode";
+export type { Mode } from "../types";
