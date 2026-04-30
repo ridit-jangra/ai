@@ -12,7 +12,7 @@
   "scripts": {
     "clean": "rm -rf dist",
     "build:js": "bun build ./src/exports/*.ts --outdir ./dist --format esm --target node",
-    "build:types": "tsc -p tsconfig.build.json",
+    "build:types": "tsc -p tsconfig.build.json && node -e \"const fs=require('fs');['ai','skills','tools','utils'].forEach(f=>{let c=fs.readFileSync('dist/exports/'+f+'.d.ts','utf8');c=c.replaceAll('../utils/','./utils/').replaceAll('../tools/','./tools/').replaceAll('../skills/','./skills/');fs.writeFileSync('dist/'+f+'.d.ts',c);})\"",
     "build": "bun run clean && bun run build:js && bun run build:types",
     "prepublishOnly": "bun run build"
   },
@@ -22,19 +22,19 @@
   "exports": {
     "./ai": {
       "import": "./dist/ai.js",
-      "types": "./dist/exports/ai.d.ts"
+      "types": "./dist/ai.d.ts"
     },
     "./skills": {
       "import": "./dist/skills.js",
-      "types": "./dist/exports/skills.d.ts"
+      "types": "./dist/skills.d.ts"
     },
     "./tools": {
       "import": "./dist/tools.js",
-      "types": "./dist/exports/tools.d.ts"
+      "types": "./dist/tools.d.ts"
     },
     "./utils": {
       "import": "./dist/utils.js",
-      "types": "./dist/exports/utils.d.ts"
+      "types": "./dist/utils.d.ts"
     }
   },
   "dependencies": {
