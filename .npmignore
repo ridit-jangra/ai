@@ -4,11 +4,9 @@ bun.lock
 MILO
 .claude
 src/
-*.ts
 *.map
 tests/
 *.md
-test.http
 tsconfig.json
 .prettierignore
 .prettierrc
