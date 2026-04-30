@@ -7,9 +7,9 @@ import {
 } from "./session";
 
 export abstract class Store {
-  abstract save(session: Session): void;
-  abstract load(id: string): Session | null;
-  abstract list(): Session[];
+  abstract save(session: Session): void | Promise<void>;
+  abstract load(id: string): Promise<Session | null>;
+  abstract list(): Promise<Session[]>;
 }
 
 export function createStore({
@@ -17,21 +17,21 @@ export function createStore({
   load,
   save,
 }: {
-  save: (session: Session) => void;
-  load: (id: string) => Session | null;
-  list: () => Session[];
+  save: (session: Session) => void | Promise<void>;
+  load: (id: string) => Session | Promise<Session> | null;
+  list: () => Session[] | Promise<Session[]>;
 }) {
   return new (class extends Store {
-    save(session: Session): void {
-      return save(session);
+    async save(session: Session) {
+      return await save(session);
     }
 
-    load(id: string): Session | null {
-      return load(id);
+    async load(id: string) {
+      return await load(id);
     }
 
-    list(): Session[] {
-      return list();
+    async list() {
+      return await list();
     }
   })();
 }

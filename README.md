@@ -103,7 +103,9 @@ const { text } = await runLLM({
 ### browser
 
 ```typescript
-const storage = {
+import { createStore } from "@ridit/ai/utils";
+
+const store = createStore({
   async save(session) {
     localStorage.setItem(session.id, JSON.stringify(session));
   },
@@ -114,9 +116,9 @@ const storage = {
   async list() {
     return [];
   },
-};
+});
 
-const { text, session } = await runLLM({ prompt: "hi", provider, storage });
+const { text, session } = await runLLM({ prompt: "hi", provider, store });
 ```
 
 bring your own adapter. redis, supabase, sqlite — whatever you want.
@@ -159,6 +161,27 @@ const { text } = await runLLM({
   provider,
   system: "you are a senior typescript engineer. be direct. no fluff.",
 });
+```
+
+## client
+
+create client 1 time, run as many times as your want without configuring multiple times.
+
+```typescript
+const provider = buildProvider({
+  model: "openai/gpt-oss-120b",
+  provider: "groq",
+  apiKey: "...",
+});
+
+const client = createClient({ provider, tools: {} }); // tools is to set a global set of tools
+
+const text = await client.run({
+  prompt: "hey!",
+  tools: { FileReadTool, FileWriteTool }, // override global tools
+});
+
+console.log(text);
 ```
 
 ---
