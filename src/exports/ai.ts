@@ -6,3 +6,4 @@ export {
   type ProviderType,
 } from "../utils/providers";
 export { createMode, agentMode, chatMode } from "../utils/mode";
+export { createClient } from "../utils/client";
