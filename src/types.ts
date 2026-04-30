@@ -2,11 +2,6 @@ import type { LanguageModel, ToolSet } from "ai";
 import type { Session } from "./utils/session";
 import type { Store } from "./utils/store";
 
-export type Mode = {
-  name: string;
-  tools: ToolSet;
-};
-
 export type ChatMessage =
   | { id: string; type: "user"; text: string }
   | { id: string; type: "assistant"; text: string }
@@ -52,7 +47,7 @@ export type StepToolResult = {
 
 export type LLMOptions = {
   system?: string;
-  mode?: Mode;
+  tools?: ToolSet;
   session?: Session;
   prompt: string;
   onToolCall?: (toolCall: StepToolCall) => void;
