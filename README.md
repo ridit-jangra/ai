@@ -136,11 +136,19 @@ import {
   GlobTool, // find files by pattern
   GrepTool, // search inside files
   ThinkTool, // internal reasoning step
-  MemoryReadTool,
-  MemoryWriteTool,
-  MemoryEditTool,
   RecallTool, // semantic memory recall
 } from "@ridit/ai/tools";
+```
+
+## Memory tools
+
+Memory tools need a store to store your memory.
+
+```typescript
+import { createMemoryTools } from "@ridit/ai/tools";
+
+const { MemoryReadTool, MemoryWriteTool, MemoryEditTool } =
+  createMemoryTools(store); // your store
 ```
 
 Create yours too!
