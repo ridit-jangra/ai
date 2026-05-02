@@ -8,7 +8,7 @@ import type { Store } from "./store";
 export type RunLLMOptions = LLMOptions & {
   session?: Session;
   sessionId?: string;
-  sessionStore?: Store; // if omitted, session won't be persisted
+  store?: Store; // if omitted, session won't be persisted
   memoryContent?: string;
 };
 
@@ -16,7 +16,7 @@ export async function runLLM({
   system,
   tools,
   session,
-  sessionStore,
+  store,
   sessionId,
   memoryContent,
   prompt,
@@ -30,8 +30,9 @@ export async function runLLM({
 
   if (session) {
     activeSession = session;
-  } else if (sessionStore && sessionId) {
-    activeSession = sessionStore.load(sessionId) ?? createSession(sessionId);
+  } else if (store && store.session && sessionId) {
+    activeSession =
+      (await store.session.load(sessionId)) ?? createSession(sessionId);
   } else {
     activeSession = createSession(sessionId);
   }
@@ -49,9 +50,23 @@ export async function runLLM({
   const messagesBeforePrompt = [...activeSession.messages];
   activeSession.messages.push({ role: "user", content: prompt });
 
+  const memoryPrompt = `
+  # Memory
+  - After EVERY response, decide if anything was learned worth saving. If yes, call MemoryWriteTool immediately.
+  - Do not wait for the user to ask you to save. Be proactive.
+  - Name files meaningfully, e.g. "user.md", "project/notes.md".
+  - Use MemoryReadTool when the user references something unfamiliar.
+  - Use MemoryEditTool for small updates to existing files instead of rewriting.
+  - Use MemoryListTool to discover what files exist before reading.
+  ${
+    store
+      ? `\nCurrently stored memories:\n${store.memory.list().join("\n") || "(none yet)"}`
+      : ""
+  }`;
+
   const result = await generateText({
     model: provider,
-    system,
+    system: system + memoryPrompt,
     messages: activeSession.messages,
     stopWhen: stepCountIs(steps ?? 100),
     tools,
@@ -89,8 +104,8 @@ export async function runLLM({
     ...result.response.messages,
   ];
 
-  if (sessionStore) {
-    sessionStore.save(activeSession);
+  if (store && store.session) {
+    store.session.save(activeSession);
   }
 
   return { text: result.text, session: activeSession };

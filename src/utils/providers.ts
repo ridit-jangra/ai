@@ -12,7 +12,8 @@ export type ProviderType =
   | "anthropic"
   | "ollama"
   | "openrouter"
-  | "google";
+  | "google"
+  | "hackclub";
 
 export type ProviderConfig = {
   provider: ProviderType;
@@ -52,6 +53,12 @@ export function buildProvider(config: ProviderConfig): LanguageModel {
       return createOpenRouter({
         apiKey: config.apiKey,
         ...(config.baseURL ? { baseURL: config.baseURL } : {}),
+      })(config.model);
+    case "hackclub":
+      if (!config.apiKey) throw new Error("OpenRouter API key missing.");
+      return createOpenRouter({
+        apiKey: config.apiKey,
+        baseURL: "",
       })(config.model);
   }
 }

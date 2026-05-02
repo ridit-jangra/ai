@@ -12,3 +12,4 @@ tsconfig.json
 .prettierrc
 eslint.config.js
 sessions
+memory
