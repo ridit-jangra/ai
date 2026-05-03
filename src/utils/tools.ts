@@ -4,9 +4,6 @@ import { FileReadTool } from "../tools/FileReadTool/tool";
 import { FileWriteTool } from "../tools/FileWriteTool/tool";
 import { GlobTool } from "../tools/GlobTool/tool";
 import { GrepTool } from "../tools/GrepTool/tool";
-import { MemoryEditTool } from "../tools/MemoryEditTool/tool";
-import { MemoryReadTool } from "../tools/MemoryReadTool/tool";
-import { MemoryWriteTool } from "../tools/MemoryWriteTool/tool";
 import { RecallTool } from "../tools/RecallTool/tool";
 import { ThinkTool } from "../tools/ThinkTool/tool";
 
@@ -16,10 +13,6 @@ export const agentTools = {
   FileEditTool,
   GrepTool,
   BashTool,
-
-  MemoryReadTool,
-  MemoryWriteTool,
-  MemoryEditTool,
   ThinkTool,
   GlobTool,
   RecallTool,
@@ -39,5 +32,4 @@ export const chatTools = {
   RecallTool,
   FileReadTool,
   GrepTool,
-  MemoryReadTool,
 };

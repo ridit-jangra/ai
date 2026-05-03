@@ -129,14 +129,7 @@ bring your own adapter. redis, supabase, sqlite — whatever you want.
 
 ```typescript
 import {
-  BashTool, // run shell commands
-  FileReadTool, // read files
-  FileWriteTool, // write files
-  FileEditTool, // patch files
-  GlobTool, // find files by pattern
-  GrepTool, // search inside files
   ThinkTool, // internal reasoning step
-  RecallTool, // semantic memory recall
 } from "@ridit/ai/tools";
 ```
 
@@ -198,14 +191,17 @@ console.log(text);
 
 ### `buildProvider(config)`
 
-| field      | type                                                                        | required                      |
-| ---------- | --------------------------------------------------------------------------- | ----------------------------- |
-| `provider` | `"anthropic" \| "openai" \| "groq" \| "google" \| "ollama" \| "openrouter"` | ✅                            |
-| `model`    | `string`                                                                    | ✅                            |
-| `apiKey`   | `string`                                                                    | for hosted providers          |
-| `baseURL`  | `string`                                                                    | for ollama / custom endpoints |
+
+| field      | type                                                                   | required                      |
+| ---------- | ---------------------------------------------------------------------- | ----------------------------- |
+| `provider` | `"anthropic" | "openai" | "groq" | "google" | "ollama" | "openrouter"` | ✅                             |
+| `model`    | `string`                                                               | ✅                             |
+| `apiKey`   | `string`                                                               | for hosted providers          |
+| `baseURL`  | `string`                                                               | for ollama / custom endpoints |
+
 
 ### `runLLM(options)`
+
 
 | field           | type             | description                      |
 | --------------- | ---------------- | -------------------------------- |
@@ -220,6 +216,7 @@ console.log(text);
 | `onToolCall`    | `function`       | intercept before tool runs       |
 | `onToolResult`  | `function`       | observe tool output              |
 | `abortSignal`   | `AbortSignal`    | cancel in-flight requests        |
+
 
 ---
 
