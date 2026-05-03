@@ -60,7 +60,7 @@ export async function runLLM({
   - Use MemoryListTool to discover what files exist before reading.
   ${
     store
-      ? `\nCurrently stored memories:\n${store.memory.list().join("\n") || "(none yet)"}`
+      ? `\nCurrently stored memories:\n${(await store.memory.list()).join("\n") || "(none yet)"}`
       : ""
   }`;
 

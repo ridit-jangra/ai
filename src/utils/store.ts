@@ -1,3 +1,4 @@
+import { access, mkdir, readdir, readFile, writeFile } from "fs/promises";
 import type { Session } from "./session";
 import {
   saveSession,
@@ -5,13 +6,13 @@ import {
   listSessions,
   type SessionStoreOptions,
 } from "./session";
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
+import { mkdirSync } from "fs";
 import { join, resolve } from "path";
 
 export interface MemoryStore {
-  read(name: string): string | null;
-  write(name: string, content: string): void;
-  list(): string[];
+  read(name: string): string | null | Promise<string | null>;
+  write(name: string, content: string): void | Promise<void>;
+  list(): string[] | Promise<string[]>;
 }
 
 export interface SessionStore {
@@ -45,21 +46,27 @@ export function createFileStore(
   mkdirSync(memoryDir, { recursive: true });
 
   const memory: MemoryStore = {
-    read(name) {
+    async read(name) {
       const fullPath = safeJoin(memoryDir, name);
-      if (!fullPath || !existsSync(fullPath)) return null;
-      return readFileSync(fullPath, "utf-8");
+      if (!fullPath) return null;
+      try {
+        await access(fullPath);
+        return await readFile(fullPath, "utf-8");
+      } catch {
+        return null;
+      }
     },
-    write(name, content) {
+
+    async write(name, content) {
       const fullPath = safeJoin(memoryDir, name);
       if (!fullPath) throw new Error("Invalid memory path");
-
-      mkdirSync(join(fullPath, ".."), { recursive: true });
-      writeFileSync(fullPath, content, "utf-8");
+      await mkdir(join(fullPath, ".."), { recursive: true });
+      await writeFile(fullPath, content, "utf-8");
     },
-    list() {
-      return readdirRecursive(memoryDir).map((f) =>
-        f.slice(memoryDir.length + 1),
+
+    async list() {
+      return readdirRecursive(memoryDir).then((files) =>
+        files.map((f) => f.slice(memoryDir.length + 1)),
       );
     },
   };
@@ -88,11 +95,13 @@ function safeJoin(base: string, name: string): string | null {
   return full.startsWith(base) ? full : null;
 }
 
-function readdirRecursive(dir: string): string[] {
-  const { readdirSync, statSync } = require("fs") as typeof import("fs");
-  const entries = readdirSync(dir, { withFileTypes: true });
-  return entries.flatMap((e) => {
-    const full = join(dir, e.name);
-    return e.isDirectory() ? readdirRecursive(full) : [full];
-  });
+async function readdirRecursive(dir: string): Promise<string[]> {
+  const entries = await readdir(dir, { withFileTypes: true });
+  const results = await Promise.all(
+    entries.map(async (e) => {
+      const full = join(dir, e.name);
+      return e.isDirectory() ? readdirRecursive(full) : [full];
+    }),
+  );
+  return results.flat();
 }

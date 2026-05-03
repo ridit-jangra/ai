@@ -16,7 +16,7 @@ export function createMemoryTools(store: Store) {
     }),
     execute: async ({ name }) => {
       try {
-        const content = store.memory.read(name);
+        const content = await store.memory.read(name);
         if (content === null) {
           return {
             success: false,
@@ -43,7 +43,7 @@ export function createMemoryTools(store: Store) {
     }),
     execute: async ({ name, content }) => {
       try {
-        store.memory.write(name, content);
+        await store.memory.write(name, content);
         return { success: true, message: `Memory written to '${name}'` };
       } catch (err) {
         return { success: false, error: String(err) };
@@ -63,7 +63,7 @@ export function createMemoryTools(store: Store) {
     }),
     execute: async ({ name, old_string, new_string }) => {
       try {
-        const content = store.memory.read(name);
+        const content = await store.memory.read(name);
         if (content === null) {
           return {
             success: false,
@@ -85,7 +85,7 @@ export function createMemoryTools(store: Store) {
           };
         }
 
-        store.memory.write(name, content.replace(old_string, new_string));
+        await store.memory.write(name, content.replace(old_string, new_string));
         return { success: true, message: `Memory '${name}' updated` };
       } catch (err) {
         return { success: false, error: String(err) };
@@ -99,7 +99,7 @@ export function createMemoryTools(store: Store) {
     inputSchema: z.object({}),
     execute: async () => {
       try {
-        const files = store.memory.list();
+        const files = await store.memory.list();
         return { success: true, files };
       } catch (err) {
         return { success: false, error: String(err) };
