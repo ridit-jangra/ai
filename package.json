@@ -1,6 +1,6 @@
 {
   "name": "@ridit/ai",
-  "version": "0.1.82",
+  "version": "0.1.84",
   "description": "Your agents, in minutes.",
   "author": "Ridit Jangra <riditjangra09@gmail.com> (https://ridit.space)",
   "license": "MIT",
@@ -11,7 +11,7 @@
   },
   "scripts": {
     "clean": "rm -rf dist",
-    "build:js": "bun build ./src/exports/*.ts --outdir ./dist --format esm --target node",
+    "build:js": "bun build ./src/exports/*.ts --outdir ./dist --format esm --target browser",
     "build:types": "tsc -p tsconfig.build.json && node -e \"const fs=require('fs');['ai','skills','tools','utils'].forEach(f=>{let c=fs.readFileSync('dist/exports/'+f+'.d.ts','utf8');c=c.replaceAll('../utils/','./utils/').replaceAll('../tools/','./tools/').replaceAll('../skills/','./skills/');fs.writeFileSync('dist/'+f+'.d.ts',c);})\"",
     "build": "bun run clean && bun run build:js && bun run build:types",
     "prepublishOnly": "bun run build"
@@ -43,12 +43,8 @@
     "@ai-sdk/groq": "^3.0.33",
     "@ai-sdk/openai": "^3.0.50",
     "@openrouter/ai-sdk-provider": "^2.5.0",
-    "@vscode/ripgrep": "^1.17.1",
     "ai-sdk-ollama": "^3.8.2",
-    "ai": "^6.0.145",
-    "diff": "^8.0.4",
-    "glob": "^13.0.6",
-    "lodash-es": "^4.18.1"
+    "ai": "^6.0.145"
   },
   "publishConfig": {
     "access": "public"

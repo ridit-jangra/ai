@@ -85,9 +85,9 @@ sessions are opt-in. no storage passed = runs in memory, nothing saved. your cal
 ### node
 
 ```typescript
-import { createFileStore } from "@ridit/ai/utils";
+import { createStore } from "@ridit/ai/utils";
 
-const store = createFileStore({ sessionsDir: "./sessions" });
+const store = createStore({ ... });
 
 const { session } = await runLLM({ prompt: "hey", provider, store });
 
@@ -119,6 +119,59 @@ const store = createStore({
 });
 
 const { text, session } = await runLLM({ prompt: "hi", provider, store });
+```
+
+### node
+
+```typescript
+import { createStore } from "@ridit/ai/utils";
+import { readFile, writeFile, mkdir } from "fs/promises";
+import { join } from "path";
+
+const sessionsDir = "./sessions";
+await mkdir(sessionsDir, { recursive: true });
+
+const store = createStore({
+  session: {
+    async save(session) {
+      await writeFile(
+        join(sessionsDir, `${session.id}.json`),
+        JSON.stringify(session),
+        "utf-8",
+      );
+    },
+    async load(id) {
+      try {
+        const raw = await readFile(join(sessionsDir, `${id}.json`), "utf-8");
+        return JSON.parse(raw);
+      } catch {
+        return null;
+      }
+    },
+    async list() {
+      return []; // implement if needed
+    },
+  },
+  memory: {
+    async read(name) {
+      return null;
+    },
+    async write(name, content) {},
+    async list() {
+      return [];
+    },
+  },
+});
+
+const { text, session } = await runLLM({ prompt: "hey", provider, store });
+
+// resume later
+const { text: text2 } = await runLLM({
+  prompt: "what did i say before?",
+  provider,
+  store,
+  sessionId: session.id,
+});
 ```
 
 bring your own adapter. redis, supabase, sqlite — whatever you want.
@@ -191,17 +244,14 @@ console.log(text);
 
 ### `buildProvider(config)`
 
-
-| field      | type                                                                   | required                      |
-| ---------- | ---------------------------------------------------------------------- | ----------------------------- |
-| `provider` | `"anthropic" | "openai" | "groq" | "google" | "ollama" | "openrouter"` | ✅                             |
-| `model`    | `string`                                                               | ✅                             |
-| `apiKey`   | `string`                                                               | for hosted providers          |
-| `baseURL`  | `string`                                                               | for ollama / custom endpoints |
-
+| field      | type         | required                      |
+| ---------- | ------------ | ----------------------------- |
+| `provider` | `"anthropic" | "openai"                      |
+| `model`    | `string`     | ✅                            |
+| `apiKey`   | `string`     | for hosted providers          |
+| `baseURL`  | `string`     | for ollama / custom endpoints |
 
 ### `runLLM(options)`
-
 
 | field           | type             | description                      |
 | --------------- | ---------------- | -------------------------------- |
@@ -216,7 +266,6 @@ console.log(text);
 | `onToolCall`    | `function`       | intercept before tool runs       |
 | `onToolResult`  | `function`       | observe tool output              |
 | `abortSignal`   | `AbortSignal`    | cancel in-flight requests        |
-
 
 ---
 

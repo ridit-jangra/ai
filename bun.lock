@@ -10,12 +10,8 @@
         "@ai-sdk/groq": "^3.0.33",
         "@ai-sdk/openai": "^3.0.50",
         "@openrouter/ai-sdk-provider": "^2.5.0",
-        "@vscode/ripgrep": "^1.17.1",
         "ai": "^6.0.145",
         "ai-sdk-ollama": "^3.8.2",
-        "diff": "^8.0.4",
-        "glob": "^13.0.6",
-        "lodash-es": "^4.18.1",
       },
       "devDependencies": {
         "@ridit/ai": "^0.1.1",
