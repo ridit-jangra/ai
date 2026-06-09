@@ -50,6 +50,7 @@
     "access": "public"
   },
   "devDependencies": {
-    "@ridit/ai": "^0.1.1"
+    "@ridit/ai": "^0.1.1",
+    "@types/node": "^25.9.2"
   }
 }

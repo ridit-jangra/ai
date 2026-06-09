@@ -66,7 +66,7 @@ export async function runLLM({
 
   const result = await generateText({
     model: provider,
-    system: system + memoryPrompt,
+    system: store ? memoryPrompt : "" + system,
     messages: activeSession.messages,
     stopWhen: stepCountIs(steps ?? 100),
     tools,
