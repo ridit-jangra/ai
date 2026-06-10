@@ -56,6 +56,7 @@ export type LLMOptions = {
   steps?: number;
   provider: LanguageModel;
   sessionStore?: Store;
+  maxTokens?: number;
 };
 
 export type PermissionDecision = "allow" | "allow_session" | "deny";

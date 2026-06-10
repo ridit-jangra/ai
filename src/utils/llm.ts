@@ -25,6 +25,7 @@ export async function runLLM({
   abortSignal,
   steps,
   provider,
+  maxTokens,
 }: RunLLMOptions): Promise<{ text: string; session: Session }> {
   let activeSession: Session;
 
@@ -71,6 +72,7 @@ export async function runLLM({
     stopWhen: stepCountIs(steps ?? 100),
     tools,
     abortSignal,
+    maxOutputTokens: maxTokens,
     experimental_repairToolCall: async ({ toolCall }) => {
       const repaired = repairJSON(toolCall.input as string);
       if (repaired === null) return null;
