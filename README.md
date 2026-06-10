@@ -246,7 +246,7 @@ console.log(text);
 
 | field      | type         | required                      |
 | ---------- | ------------ | ----------------------------- |
-| `provider` | `"string"    | ✅                            |
+| `provider` | `string`     | ✅                            |
 | `model`    | `string`     | ✅                            |
 | `apiKey`   | `string`     | for hosted providers          |
 | `baseURL`  | `string`     | for ollama / custom endpoints |
